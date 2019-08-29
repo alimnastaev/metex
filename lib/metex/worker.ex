@@ -1,4 +1,18 @@
 defmodule Metex.Worker do
+  @moduledoc false
+
+  # Adding loop/0 to the worker so it can respond to messages
+  def loop do
+    receive do
+      {sender_pid, location} ->
+        send(sender_pid, {:ok, temperature_of(location)})
+
+      _ ->
+        IO.puts("don't know how to process this message")
+    end
+
+    loop
+  end
 
   # 1. Data transformation(result): form URL to HTTP response to parsing that response
   # 2. Case statement: parsed response returns location and the temperature,
